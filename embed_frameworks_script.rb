@@ -162,8 +162,10 @@ module Pod
               # Vendored frameworks might have a dSYM file next to them so ensure its copied. Frameworks built from
               # sources will have their dSYM generated and copied by Xcode.
               script << %(  install_dsym "#{framework_with_dsym[:dsym_input_path]}"\n) unless framework_with_dsym[:dsym_input_path].nil?
-              framework_folder_path=File.dirname("#{framework_with_dsym[:dsym_input_path]}") unless framework_with_dsym[:dsym_input_path].nil?
-              script << %(  install_bcsymbolmaps "#{framework_folder_path}"\n) unless framework_folder_path.nil?
+              if config.to_s  == "Release"
+              	framework_folder_path=File.dirname("#{framework_with_dsym[:dsym_input_path]}") unless framework_with_dsym[:dsym_input_path].nil?
+              	script << %(  install_bcsymbolmaps "#{framework_folder_path}"\n) unless framework_folder_path.nil?
+              end
             end
             script << "fi\n"
           end
