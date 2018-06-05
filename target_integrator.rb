@@ -261,9 +261,6 @@ module Pod
               end
             }
             input_paths = new_input_paths
-            puts '-----------------------'
-            puts input_paths
-            puts '-----------------------'
             TargetIntegrator.add_embed_frameworks_script_phase_to_target(native_target, script_path, input_paths, output_paths)
           end
         end
