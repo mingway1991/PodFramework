@@ -158,12 +158,26 @@ module Pod
           unless frameworks_with_dsyms.empty?
             script << %(if [[ "$CONFIGURATION" == "#{config}" ]]; then\n)
             frameworks_with_dsyms.each do |framework_with_dsym|
-              script << %(  install_framework "#{framework_with_dsym[:input_path]}"\n)
+              input_path = framework_with_dsym[:input_path]
+              if input_path.include?"LibRepo"
+                location = input_path.index("LibRepo")
+                input_path = "${HOME}/Documents/"+input_path[location,input_path.length-location]
+              end
+              dsym_input_path = framework_with_dsym[:dsym_input_path]
+              unless dsym_input_path.nil?
+                if dsym_input_path.include?"LibRepo"
+                  location = dsym_input_path.index("LibRepo")
+                  dsym_input_path = "${HOME}/Documents/"+dsym_input_path[location,dsym_input_path.length-location]
+                end
+              end
+              puts input_path
+              puts dsym_input_path
+              script << %(  install_framework "#{input_path}"\n)
               # Vendored frameworks might have a dSYM file next to them so ensure its copied. Frameworks built from
               # sources will have their dSYM generated and copied by Xcode.
-              script << %(  install_dsym "#{framework_with_dsym[:dsym_input_path]}"\n) unless framework_with_dsym[:dsym_input_path].nil?
+              script << %(  install_dsym "#{dsym_input_path}"\n) unless dsym_input_path.nil?
               if config.to_s  == "Release"
-              	framework_folder_path=File.dirname("#{framework_with_dsym[:dsym_input_path]}") unless framework_with_dsym[:dsym_input_path].nil?
+              	framework_folder_path=File.dirname("#{dsym_input_path}") unless dsym_input_path.nil?
               	script << %(  install_bcsymbolmaps "#{framework_folder_path}"\n) unless framework_folder_path.nil?
               end
             end
