@@ -170,8 +170,6 @@ module Pod
                   dsym_input_path = "${HOME}/Documents/"+dsym_input_path[location,dsym_input_path.length-location]
                 end
               end
-              puts input_path
-              puts dsym_input_path
               script << %(  install_framework "#{input_path}"\n)
               # Vendored frameworks might have a dSYM file next to them so ensure its copied. Frameworks built from
               # sources will have their dSYM generated and copied by Xcode.
