@@ -255,7 +255,11 @@ module Pod
             input_paths.each{|path| 
               if path.include?"LibRepo"
                 location = path.index("LibRepo")
-                new_input_paths.append("${HOME}/Documents/"+path[location,path.length-location])
+                framework_name = path[location,path.length-location].split('/').at(1)
+                new_path = "${BUILT_PRODUCTS_DIR}/"+framework_name+"/"+framework_name+".framework"
+                unless new_input_paths.include?(new_path)
+                  new_input_paths.append(new_path)
+                end
               else
                 new_input_paths.append(path)
               end
